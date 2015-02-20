@@ -22,8 +22,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.util.Log;
+import android.view.View;
 
 import com.github.ksoichiro.android.observablescrollview.CacheFragmentStatePagerAdapter;
 import com.github.ksoichiro.android.observablescrollview.ObservableListView;
@@ -38,33 +38,31 @@ import com.nineoldandroids.view.ViewPropertyAnimator;
  * SlidingTabLayout and SlidingTabStrip are from google/iosched:
  * https://github.com/google/iosched
  */
-public class ViewPagerTabListViewActivity extends BaseActivity implements ObservableScrollViewCallbacks {
+public class TabListViewActivity extends BaseActivity implements ObservableScrollViewCallbacks {
 
     private View mHeaderView;
     private View mToolbarView;
+    private ObservableListView mListView;
     private int mBaseTranslationY;
-    private ViewPager mPager;
-    private NavigationAdapter mPagerAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_viewpagertab);
+        setContentView(R.layout.activity_scrolltab);
 
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
         mHeaderView = findViewById(R.id.header);
         ViewCompat.setElevation(mHeaderView, getResources().getDimension(R.dimen.toolbar_elevation));
         mToolbarView = findViewById(R.id.toolbar);
-        mPagerAdapter = new NavigationAdapter(getSupportFragmentManager());
-        mPager = (ViewPager) findViewById(R.id.pager);
-        mPager.setAdapter(mPagerAdapter);
+        mListView = (ObservableListView)findViewById(R.id.scroll);
+
 
         SlidingTabLayout slidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
         slidingTabLayout.setCustomTabView(R.layout.tab_indicator, android.R.id.text1);
         slidingTabLayout.setSelectedIndicatorColors(getResources().getColor(R.color.accent));
         slidingTabLayout.setDistributeEvenly(true);
-        slidingTabLayout.setViewPager(mPager);
 
         // When the page is selected, other fragments' scrollY should be adjusted
         // according to the toolbar status(shown/hidden)
@@ -110,18 +108,8 @@ public class ViewPagerTabListViewActivity extends BaseActivity implements Observ
     public void onUpOrCancelMotionEvent(ScrollState scrollState) {
         mBaseTranslationY = 0;
 
-        Fragment fragment = getCurrentFragment();
-        Log.d("CurrentFragment",fragment.toString());
-        if (fragment == null) {
-            return;
-        }
-        View view = fragment.getView();
-        if (view == null) {
-            return;
-        }
-
         int toolbarHeight = mToolbarView.getHeight();
-        final ObservableListView listView = (ObservableListView) view.findViewById(R.id.scroll);
+        final ObservableListView listView = (ObservableListView) findViewById(R.id.scroll);
         if (listView == null) {
             return;
         }
@@ -148,13 +136,10 @@ public class ViewPagerTabListViewActivity extends BaseActivity implements Observ
         }
     }
 
-    private Fragment getCurrentFragment() {
-        return mPagerAdapter.getItemAt(mPager.getCurrentItem());
-    }
 
     private void propagateToolbarState(boolean isShown) {
         int toolbarHeight = mToolbarView.getHeight();
-
+        /*
         // Set scrollY for the fragments that are not created yet
         mPagerAdapter.setScrollY(isShown ? 0 : toolbarHeight);
 
@@ -172,18 +157,20 @@ public class ViewPagerTabListViewActivity extends BaseActivity implements Observ
             }
 
             ObservableListView listView = (ObservableListView) f.getView().findViewById(R.id.scroll);
+            */
             if (isShown) {
                 // Scroll up
-                if (0 < listView.getCurrentScrollY()) {
-                    listView.setSelection(0);
+                if (0 < mListView.getCurrentScrollY()) {
+                    mListView.setSelection(0);
                 }
             } else {
                 // Scroll down (to hide padding)
-                if (listView.getCurrentScrollY() < toolbarHeight) {
-                    listView.setSelection(1);
+                if (mListView.getCurrentScrollY() < toolbarHeight) {
+                    mListView.setSelection(1);
                 }
             }
-        }
+        //}
+
     }
 
     private boolean toolbarIsShown() {

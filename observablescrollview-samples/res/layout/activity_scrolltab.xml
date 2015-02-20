@@ -18,20 +18,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!--
-    Padding for ViewPager must be set outside the ViewPager itself
-    because with padding, EdgeEffect of ViewPager become strange.
-    -->
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingTop="@dimen/tab_height">
-
-        <android.support.v4.view.ViewPager
-            android:id="@+id/pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/header"
@@ -49,11 +35,25 @@
             app:popupTheme="@style/Theme.AppCompat.Light.DarkActionBar"
             app:theme="@style/Toolbar" />
 
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            app:popupTheme="@style/Theme.AppCompat.Light.DarkActionBar"
+            app:theme="@style/Toolbar" />
+
         <com.google.samples.apps.iosched.ui.widget.SlidingTabLayout
             android:id="@+id/sliding_tabs"
             android:layout_width="match_parent"
-            android:layout_height=  "@dimen/tab_height"
+            android:layout_height="@dimen/tab_height"
             android:background="@color/primary" />
     </LinearLayout>
+
+    <com.github.ksoichiro.android.observablescrollview.ObservableListView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </FrameLayout>
